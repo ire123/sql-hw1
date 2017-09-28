@@ -1,0 +1,351 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Courier New;}{\f1\fnil\fcharset2 Symbol;}}
+{\colortbl ;\red255\green0\blue0;\red0\green0\blue255;}
+{\*\generator Riched20 10.0.15063}\viewkind4\uc1 
+\pard\f0\fs22\lang1033 SQL Homework Assignment\par
+\par
+\par
+Better option: make a github repo, put the sql files for pagilla in it. Make a README.md file and put all the queries and questions in there formated nicely \par
+and give instructions on how to populate the database.\par
+\par
+To create this database\par
+Open up psql in the directory of these files and run these commands\par
+\\i \cf1 pagila-schema.sql\par
+\\i pagila-insert-data.sql\par
+\\i pagila-data.sql\par
+\par
+\cf0 1a. You need a list of all the actors\rquote  first name and last name\par
+    \cf1 Select first_name, last_name from actor;\par
+\par
+\cf0 1b. Display the first and last name of each actor in a single column in upper case letters. Name the column Actor Name\par
+    \cf1 Select upper (first_name) || ' ' || upper(last_name) from actor as Actor_Name; \cf0\par
+\par
+2a. You need to find the id, first name, and last name of an actor, of whom you know only the first name of "Joe."\par
+ What is one query would you use to obtain this information?\cf1\par
+\par
+    Select actor_id, first_name, last_name from actor where lower(first_name) = lower ('Joe');\par
+\cf0\par
+2b. Find all actors whose last name contain the letters GEN. Make this case insensitive.\par
+\tab\cf1 Select actor_id, first_name, last_name from actor where lower(last_name)  like lower('%GEN%') ;\par
+\par
+\cf0 2c. Find all actors whose last names contain the letters LI. This time, order the rows by last name and first name, in that order. Make this case insensitive.\par
+\par
+\cf1\tab Select first_name, last_name from actor where lower(last_name) like lower('%LI%')\par
+\tab      order by last_name, first_name;                \cf0\par
+     \par
+2d. Using IN, display the country_id and country columns of the following countries: Afghanistan, Bangladesh, and China:\par
+\tab\cf1 Select country_id, country from country where country in ('Afghanistan', 'Bangladesh', 'China');\par
+\cf0\par
+3a. Add a middle_name column to the table actor. Specify the appropriate column type\par
+\tab\cf1 Alter table actor\par
+\tab Add column middle_name VARCHAR;\par
+\cf0\par
+3b. You realize that some of these actors have tremendously long last names. Change the data type of the middle_name column to something that can hold more than varchar.\par
+\tab\cf1 Alter table actor\par
+\tab Alter column middle_name type text;\par
+\cf0\par
+Now we didn\rquote t explicitly cover this in class so exercise your googling skills. \par
+3c. Now write a query that would remove the middle_name column.\par
+\tab\cf1 Alter table actor\par
+\tab Drop column If Exists middle_name; \par
+\cf0\par
+4a. List the last names of actors, as well as how many actors have that last name.\par
+\tab\cf1 Select last_name, count(last_name) from actor as No_Actors \par
+\tab    group by last_name; \cf0\par
+\par
+4b. List last names of actors and the number of actors who have that last name, but only for names that are shared by at least two actors.\par
+\tab\cf1 Select last_name, last_name as No_Actors from actor\par
+\tab    having count(last_name) > 1 group by last_name; \par
+\cf0\par
+4c. Oh, no! The actor HARPO WILLIAMS was accidentally entered in the actor table as GROUCHO WILLIAMS. Write a query to fix the record.\par
+\tab\cf1 Select Actor_id, first_name, last_name from actor \par
+\tab    where lower (last_name) = lower('Williams');   and lower (first_name) = lower('Groucho');\par
+\tab  Update actor set first_name = 'HARPO' where actor_id = 172;  \par
+\cf0\par
+4d. Perhaps we were too hasty in changing GROUCHO to HARPO. It turns out that GROUCHO was the correct name after all! \par
+In a single query, \par
+if the first name of the actor is currently HARPO, change it to GROUCHO. \par
+Otherwise, change the first name to MUCHO GROUCHO, as that is exactly what the actor will be with the grievous error. \par
+BE CAREFUL NOT TO CHANGE THE FIRST NAME OF EVERY ACTOR TO MUCHO GROUCHO\par
+(Hint: update the record using a unique identifier.)\par
+\tab\cf1 Select \par
+\tab      case first_name\par
+\tab        when 'HARPO' then 'GROUCHO'\par
+\tab        ELSE 'MUCHO GROUCHO'\par
+\tab      end as first_name\par
+\tab  from actor\par
+\tab  where actor_id = 172;\par
+\cf0\par
+5a. \par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360 What\rquote s the difference between a left join and a right join. \par
+
+\pard\tab\cf1 A left join includes all rows in left table whether there is a matching row in the right table.\par
+\tab Select apples from tree\par
+\tab      left join orchard on (apple_color = orchard.apple_color; \par
+\cf0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360 What about an inner join and an outer join? \par
+
+\pard\tab\cf1 An inner join includes only rows from both tables that match. \par
+\cf0\par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360 When would you use rank? \par
+
+\pard\tab  To assign a ranking based on some datum to each entry in a \cf1 partitioned group. \par
+\tab  If 2 items in a partition are the same, they are given the same rank and the next rank value\par
+\tab  is skipped.    \par
+\cf0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360 What about dense_rank? \par
+
+\pard\cf1\tab   Just like rank except no rank is skipped.  When 2 entries have the same ranked value theyare given the same rank\par
+\tab   but the next rank is not skipped. \par
+\par
+Example query for rank and dense rank:   \par
+\tab SELECT\par
+\tab  product_name,\par
+\tab  group_name,\par
+\tab  price,\par
+\tab  DENSE_RANK () OVER (   >>> or RANK\par
+\tab  PARTITION BY group_name\par
+\tab  ORDER BY\par
+\tab  price\par
+\tab  )\par
+\tab FROM\par
+\tab  products\par
+\tab INNER JOIN product_groups USING (group_id);\cf0\par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360 When would you use a subquery in a select? \par
+
+\pard\cf1 When you wish to retrieve a calculation using an aggregate function but you do not want the aggregate function to apply to the main query\cf0 .\par
+\par
+\cf1 SELECT p1.product_name,\par
+  \b (SELECT MAX(product_id)\par
+   FROM products p2\par
+   WHERE p1.product_id = p2.product_id) subquery2\b0\par
+FROM products p1;\par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360\cf0 When would you use a right join?\par
+
+\pard  \cf1 Use a right join when you want all rows from the right table to be returned in the query whether or not there are matching rows fromthe other table.\par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360\cf0 When would you use an inner join over an outer join?\par
+
+\pard\cf1 Use an inner join when you want only matching rows in result set.\par
+Use an outer join when you want all rows  from your primary table whether or not ther are matching rows in secondary tables.   \cf0\par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360 What\rquote s the difference between a left outer and a left join\par
+
+\pard\cf1 No difference\cf0\par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360 When would you use a group by?\par
+
+\pard\tab\cf1 GROUP BY clause can be used with an aggregate function to collect data across multiple rows and then group the results by one or more columns.\par
+\tab Example:   SELECT category_id, COUNT(*) AS total_products\par
+\tab\tab\tab FROM products\par
+\tab\tab\tab WHERE category_id IS NOT NULL\par
+\tab\tab\tab GROUP BY category_id\par
+\cf0\par
+\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360 Describe how you would do data reformatting\par
+
+\pard\tab\cf1 This question refers to formatting functions which use templates for specific formats such as  date and time,  char to int.   \par
+\tab Example:  SELECT to_char("date", 'DD/MM/YYYY') FROM mytable; \par
+\cf0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360 When would you use a with clause?\par
+
+\pard     \cf1 With clause is used in complex queries to create table expressions.  \par
+    Common table expressions are just temporary tables created within a larger query to make it easier to get the results needed.\par
+\tab In example regional_sales and top_regions are both table expressions that contain intermediate values needed  for thefinal result.\par
+\par
+\tab WITH regional_sales AS (\par
+\tab         SELECT region, SUM(amount) AS total_sales\par
+\tab         FROM orders\par
+\tab         GROUP BY region\par
+\tab      ), top_regions AS (\par
+\tab         SELECT region\par
+\tab         FROM regional_sales\par
+\tab         WHERE total_sales > (SELECT SUM(total_sales)/10 FROM regional_sales)\par
+\tab      )\par
+SELECT region,\par
+       product,\par
+       SUM(quantity) AS product_units,\par
+       SUM(amount) AS product_sales\par
+FROM orders\par
+WHERE region IN (SELECT region FROM top_regions)\par
+\cf0\par
+
+\pard{\pntext\f1\'B7\tab}{\*\pn\pnlvlblt\pnf1\pnindent0{\pntxtb\'B7}}\fi-360\li360 bonus: When would you use a self join?\par
+
+\pard\par
+\tab\cf1 A self-join is used when you need to join a table to itself to retrieve 2 different sets of data and show their relationship.\par
+\tab For example:  a table has all employees,  org ids,  job role. \par
+\tab You need to get all employees and all mgrs and match on org id to get each employee's mgr. \par
+\cf0\par
+You\rquote re answering each of these questions. Please include examples and answer them in plain english. \par
+\par
+6a. Use a JOIN to display the first and last names, as well as the address, of each staff member. Use the tables staff and address:\par
+\tab\cf1 Select first_name, last_name, address from staff a  left join address b  on ( a.address_id = b.address_id) ;\cf0\par
+\tab\par
+6b. Use a JOIN to display the total amount rung up by each staff member in January of 2007. Use tables staff and payment.\par
+You\rquote ll have to google for this one, we didn\rquote t cover it explicitly in class. \par
+\par
+\cf1 Select first_name, last_name, cast(sum(amount) as money)\par
+from staff a Left join payment_p2007_01 b on (a.staff_id = b.staff_id)\par
+group by a.staff_id;  \par
+\par
+or\par
+\par
+Select first_name, last_name, cast(sum(amount) as money) as Total_payments\par
+from staff a Left join payment b on (a.staff_id = b.staff_id)\par
+where date(payment_date) between '2007-01-01' and '2007-01-31'  \par
+group by a.staff_id;\par
+\cf0\par
+6c. List each film and the number of actors who are listed for that film. Use tables film_actor and film. Use inner join.\par
+\tab\cf1 Select title, count(film_actor.actor_id)\par
+\tab from film inner join film_actor on (film.film_id = film_actor.film_id)\par
+\tab group by title \par
+\tab order by title;\par
+\cf0\par
+6d. How many copies of the film Hunchback Impossible exist in the inventory system?\par
+\tab\cf1 Select count(inventory.film_id), title from inventory, film \par
+\tab    where inventory.film_id = film.film_id and lower(title) = lower ('Hunchback Impossible')\par
+\tab group by title, inventory.film_id;\par
+\par
+\cf0 6e. Using the tables payment and customer and the JOIN command, list the total paid by each customer. List the customers alphabetically by last name:\par
+\par
+\cf1 Select first_name, last_name , cast(sum(amount)as money) as Total_Payments from customer a Left join payment b on ( a.customer_id = b.customer_id) \par
+group by a.customer_id\par
+order by last_name; \par
+\cf0\par
+7a. The music of Queen and Kris Kristofferson have seen an unlikely resurgence. As an unintended consequence, films starting with the letters K and Q have also soared in popularity. display the titles of movies starting with the letters K and Q whose language is English.\par
+\par
+Select title, original_language from film where title in 'Q' , 'K' and \par
+\par
+\cf1 Select title, name from film a join language b on (a.language_id = b.language_id)\par
+WHERE lower(title) SIMILAR TO '(q|k)%' and a.language_id = 1;\cf0\par
+\par
+7b. Use subqueries to display all actors who appear in the film Alone Trip.\par
+\cf1\par
+Select a.first_name, a.last_name, b.title \par
+from actor a , film b \par
+where a.actor_id in(select c.actor_id \par
+   from  film_actor c \par
+   where c.film_id = b.film_id \par
+                    and lower(b.title) = lower('Alone Trip'));\par
+ \cf0   \par
+7c. You want to run an email marketing campaign in Canada, for which you will need the names and email addresses of all Canadian customers. Use joins to retrieve this information.\par
+\par
+\cf1 Select first_name, last_name, email, country from customer a\par
+inner join address b on a.address_id = b.address_id\par
+inner join city c on c.city_id = b.city_id \par
+inner join country d on d.country_id = c.country_id\par
+where lower(country) = lower('canada');\par
+\cf0\par
+7d. Sales have been lagging among young families, and you wish to target all family movies for a promotion. Identify all movies categorized as a family film.\par
+Now we mentioned family film, but there is no family film category. There\rquote s a category that resembles that. In the real world nothing will be exact.\par
+\par
+\cf1 select title, rating  from film\par
+where rating = 'G'\par
+order by title;\par
+\cf0\par
+\cf1 or \par
+ \par
+select title, name from film a\par
+inner join film_category b on a.film_id = b.film_id\par
+inner join category c on c.category_id = b.category_id \par
+where lower(name) = lower('family');\par
+\par
+\cf0 7e. Display the most frequently rented movies in descending order.\par
+\cf1 select title, count(b.film_id)  No_rentals from film a,\par
+inventory b where a.film_id = b.film_id  \par
+group by title, b.film_id \par
+order by No_rentals desc, title asc;\par
+\cf0\par
+\par
+7f. Write a query to display how much business, in dollars, each store brought in.\par
+\cf1 select store_id, sum(amount) as Store_income from store\par
+, payment where staff_id = manager_staff_id\par
+group by store_id;\par
+\cf0\par
+7g. Write a query to display for each store its store ID, city, and country.\par
+ \par
+\cf1 select store_id, city, country from store a\par
+inner join address b on a.address_id = b.address_id\par
+inner join city c on c.city_id = b.city_id \par
+inner join country d on d.country_id = c.country_id\par
+;\par
+\par
+\cf0 7h. List the top five genres in gross revenue in descending \par
+\par
+\cf1  Select name as genre, cast(sum(amount) as money) as gross from category a\par
+inner join film_category b on a.category_id = b.category_id\par
+inner join inventory c on c.film_id = b.film_id \par
+inner join rental d on c.inventory_id = d.inventory_id \par
+inner join payment e on d.customer_id = e.customer_id\par
+group by genre\par
+order by gross desc \par
+limit 5;\par
+\cf0\par
+8a. In your new role as an executive, you would like to have an easy way of viewing the Top five genres by gross revenue. Use the solution from the problem above to create a view. \par
+\cf1 Create or Replace view top_five_genres AS\par
+\cf0\par
+CREATE VIEW top_five_genres AS\par
+\cf1 Select name as genre, cast(sum(amount) as money) as gross from category a\par
+inner join film_category b on a.category_id = b.category_id\par
+inner join inventory c on c.film_id = b.film_id \par
+inner join rental d on c.inventory_id = d.inventory_id \par
+inner join payment e on d.customer_id = e.customer_id\par
+group by genre\par
+order by gross desc \par
+limit 5;\par
+\cf0\par
+    \par
+8b. How would you display the view that you created in 8a?\par
+\par
+\cf1 Select * from top_five_genres;\par
+\cf0\par
+8c. You find that you no longer need the view top_five_genres. Write a query to delete it.\par
+\cf1 DROP VIEW [IF EXISTS] top_five_genres;\par
+\cf0\par
+\par
+Appendix: List of Tables in the Pagilla DB\par
+A schema is also available as sakila_schema.svg. Open it with a browser to view.\par
+\tab 'actor'\par
+\tab 'actor_info'\par
+\tab 'address'\par
+\tab 'category'\par
+\tab 'city'\par
+\tab 'country'\par
+\tab 'customer'\par
+\tab 'customer_list'\par
+\tab 'film'\par
+\tab 'film_actor'\par
+\tab 'film_category'\par
+\tab 'film_list'\par
+\tab 'film_text'\par
+\tab 'inventory'\par
+\tab 'language'\par
+\tab 'nicer_but_slower_film_list'\par
+\tab 'payment'\par
+\tab 'rental'\par
+\tab 'sales_by_film_category'\par
+\tab 'sales_by_store'\par
+\tab 'staff'\par
+\tab 'staff_list'\par
+\tab 'store'\par
+\par
+\cf1 The link:\cf0\par
+{{\field{\*\fldinst{HYPERLINK https://dev.mysql.com/doc/sakila/en/sakila-structure.html }}{\fldrslt{https://dev.mysql.com/doc/sakila/en/sakila-structure.html\ul0\cf0}}}}\cf1\f0\fs22\par
+\par
+}
+ 
