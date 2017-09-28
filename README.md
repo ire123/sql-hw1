@@ -5,7 +5,7 @@ Better option: make a github repo, put the sql files for pagilla in it. Make a R
 and give instructions on how to populate the database.
 
 To create this database
-Open up psql in the directory of these files and run these commands
+Open up psql in the directory of these files and run these commands.
 
 \i pagila-schema.sql
 \i pagila-insert-data.sql
@@ -88,11 +88,12 @@ BE CAREFUL NOT TO CHANGE THE FIRST NAME OF EVERY ACTOR TO MUCHO GROUCHO
 
 What’s the difference between a left join and a right join. 
 
-	A left join includes all rows in left table whether there is a matching row in the right table.
+	A left join includes all rows in left table whether there is   a matching row in the right table.
 	Select apples from tree
 	     left join orchard on (apple_color = orchard.apple_color; 
 
 What about an inner join and an outer join? 
+
 	An inner join includes only rows from both tables that match. 
 
 
@@ -104,10 +105,9 @@ When would you use rank?
 
 What about dense_rank? 
 
-	  Just like rank except no rank is skipped.  When 2 entries have the same ranked value theyare given the same rank
+	  Just like rank except no rank is skipped.  When 2 entries           have the same ranked value theyare given the same rank
 	  but the next rank is not skipped. 
-
-Example query for rank and dense rank:   
+   Example query for rank and dense rank:   
 	SELECT
 	 product_name,
 	 group_name,
@@ -154,15 +154,13 @@ When would you use a group by?
 
 Describe how you would do data reformatting
 
-	This question refers to formatting functions which use templates for specific formats such as  date and time,  char to int.   
-	Example:  SELECT to_char("date", 'DD/MM/YYYY') FROM mytable; 
+	This question refers to formatting functions which use templates for specific formats such as  date and time,  char to int.   xample:  SELECT to_char("date", 'DD/MM/YYYY') FROM mytable; 
 
 When would you use a with clause?
 
     With clause is used in complex queries to create table expressions.  
     Common table expressions are just temporary tables created within a larger query to make it easier to get the results needed.
 	In example regional_sales and top_regions are both table expressions that contain intermediate values needed  for thefinal result.
-
 	WITH regional_sales AS (
 	        SELECT region, SUM(amount) AS total_sales
 	        FROM orders
